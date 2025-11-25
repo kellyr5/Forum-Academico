@@ -1,0 +1,29 @@
+const express = require('express');
+const cors = require('cors');
+const db = require('./config/database');
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+const usuariosRoutes = require('./routes/usuarios');
+const disciplinasRoutes = require('./routes/disciplinas');
+const topicosRoutes = require('./routes/topicos');
+const respostasRoutes = require('./routes/respostas');
+const recadosRoutes = require('./routes/recados');
+const categoriasRoutes = require('./routes/categorias');
+const votosRoutes = require('./routes/votos');
+
+app.use('/api/usuarios', usuariosRoutes);
+app.use('/api/disciplinas', disciplinasRoutes);
+app.use('/api/topicos', topicosRoutes);
+app.use('/api/respostas', respostasRoutes);
+app.use('/api/recados', recadosRoutes);
+app.use('/api/categorias', categoriasRoutes);
+app.use('/api/votos', votosRoutes);
+
+app.listen(3000, () => {
+  console.log('Servidor rodando em http://localhost:3000');
+});

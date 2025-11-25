@@ -1,0 +1,3 @@
+Este e um arquivo de teste criado pelo Selenium.
+Conteudo: Teste de upload no Forum Academico UNIFEI.
+Data: 18/11/2025 20:28:45

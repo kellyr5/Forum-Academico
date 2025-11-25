@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Fórum Acadêmico UNIFEI</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      max-width: 1000px;
+      width: 90%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .login-left {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: white;
+      padding: 60px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 24px;
+    }
+
+    .login-left h1 {
+      font-size: 32px;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+
+    .login-left p {
+      font-size: 16px;
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+
+    .login-right {
+      padding: 60px 40px;
+    }
+
+    .login-right h2 {
+      font-size: 28px;
+      color: #1e3c72;
+      margin-bottom: 8px;
+    }
+
+    .login-right .subtitle {
+      color: #64748b;
+      margin-bottom: 32px;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      color: #1e293b;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: all 0.3s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #1e3c72;
+      box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 14px;
+      background: #1e3c72;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-login:hover {
+      background: #152d5a;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(30, 60, 114, 0.4);
+    }
+
+    .alert {
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      font-size: 14px;
+    }
+
+    .alert-error {
+      background: #fee2e2;
+      border: 1px solid #fca5a5;
+      color: #991b1b;
+    }
+
+    .alert-success {
+      background: #d1fae5;
+      border: 1px solid #6ee7b7;
+      color: #065f46;
+    }
+
+    .login-footer {
+      margin-top: 24px;
+      text-align: center;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    .login-footer a {
+      color: #1e3c72;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .login-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .login-left {
+        padding: 40px 24px;
+      }
+      
+      .login-right {
+        padding: 40px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-left">
+      <svg class="logo" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="40" cy="40" r="38" stroke="white" stroke-width="2" opacity="0.3"/>
+        <path d="M40 15L55 35H25L40 15Z" fill="white"/>
+        <rect x="25" y="35" width="30" height="30" fill="white"/>
+        <path d="M35 45H45M35 50H45M35 55H45" stroke="#1e3c72" stroke-width="2"/>
+      </svg>
+      <h1>Fórum Acadêmico UNIFEI</h1>
+      <p>Plataforma de Discussão e Gerenciamento Acadêmico da Universidade Federal de Itajubá</p>
+    </div>
+
+    <div class="login-right">
+      <h2>Bem-vindo!</h2>
+      <p class="subtitle">Faça login para acessar sua área</p>
+
+      <div id="alert-container"></div>
+
+      <form id="form-login">
+        <div class="form-group">
+          <label class="form-label">Email Institucional</label>
+          <input 
+            type="email" 
+            class="form-input" 
+            id="email" 
+            placeholder="seu.email@unifei.edu.br"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Senha</label>
+          <input 
+            type="password" 
+            class="form-input" 
+            id="senha" 
+            placeholder="Digite sua senha"
+            required
+          >
+        </div>
+
+        <button type="submit" class="btn-login">Entrar</button>
+      </form>
+
+      <div class="login-footer">
+        Não tem uma conta? <a href="cadastro.html">Cadastre-se aqui</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="shared/js/auth.js"></script>
+  <script>
+    document.getElementById('form-login').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const senha = document.getElementById('senha').value;
+      const alertContainer = document.getElementById('alert-container');
+      
+      alertContainer.innerHTML = '';
+      
+      const result = await fazerLogin(email, senha);
+      
+      if (!result.success) {
+        alertContainer.innerHTML = `
+          <div class="alert alert-error">
+            ${result.error}
+          </div>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>

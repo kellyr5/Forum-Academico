@@ -1,0 +1,6 @@
+FORUM ACADEMICO UNIFEI - Arquivo de Teste
+
+Este e um documento de exemplo para validar o sistema de upload.
+Data: 19/11/2025 09:20
+
+Conteudo de teste gerado automaticamente.
