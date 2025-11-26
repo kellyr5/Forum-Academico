@@ -106,5 +106,5 @@ Taxa de resolucao: 100%
 ## EQUIPE
 
 - Desenvolvimento: Equipe 10
-- Disciplina: Engenharia de Software
+- Disciplina: Gerencia de Projetos de Software
 - Instituicao: UNIFEI
