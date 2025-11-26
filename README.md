@@ -2,7 +2,7 @@
 
 Sistema web de forum academico para a Universidade Federal de Itajuba (UNIFEI).
 
-**Versao:** 3.0.0  
+**Versao:** 4.0.0  
 **Release:** 04  
 **Status:** Producao  
 **Data:** 26/11/2025
@@ -91,7 +91,7 @@ node server.js
 ## CONTROLE DE VERSAO
 
 - Repositorio Git inicializado
-- Tag v3.0.0 criada
+- Tag v4.0.0 criada
 - Baseline salva
 
 ---
