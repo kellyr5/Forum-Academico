@@ -35,6 +35,22 @@ router.get('/monitor/:monitorId', verificarAutenticacao, (req, res) => {
   });
 });
 
+// GET - Obter monitoria por id
+router.get('/:id', verificarAutenticacao, (req, res) => {
+  const sql = `
+    SELECT m.*, u.nome_completo as monitor_nome, d.nome as disciplina_nome, d.codigo
+    FROM monitorias m
+    JOIN usuarios u ON m.monitor_id = u.id
+    JOIN disciplinas d ON m.disciplina_id = d.id
+    WHERE m.id = ?
+  `;
+  db.query(sql, [req.params.id], (err, results) => {
+    if (err) return res.status(500).json({ error: 'Erro ao buscar monitoria' });
+    if (!results || results.length === 0) return res.status(404).json({ error: 'Monitoria nao encontrada' });
+    res.json(results[0]);
+  });
+});
+
 // POST - Criar monitoria
 router.post('/', verificarAutenticacao, (req, res) => {
   const { monitor_id, disciplina_id, semestre } = req.body;
@@ -53,13 +69,20 @@ router.post('/', verificarAutenticacao, (req, res) => {
 
 // PUT - Atualizar monitoria
 router.put('/:id', verificarAutenticacao, (req, res) => {
-  const { ativa, semestre } = req.body;
+  const { ativa, semestre, monitor_id, disciplina_id } = req.body;
   db.query('SELECT * FROM monitorias WHERE id = ?', [req.params.id], (err, results) => {
     if (err || results.length === 0) return res.status(404).json({ error: 'Monitoria nao encontrada' });
     const m = results[0];
-    const sql = 'UPDATE monitorias SET ativa = ?, semestre = ? WHERE id = ?';
-    db.query(sql, [ativa !== undefined ? ativa : m.ativa, semestre || m.semestre, req.params.id], (err) => {
-      if (err) return res.status(500).json({ error: 'Erro ao atualizar monitoria' });
+    const sql = 'UPDATE monitorias SET monitor_id = ?, disciplina_id = ?, ativa = ?, semestre = ? WHERE id = ?';
+    const newMonitor = monitor_id !== undefined ? monitor_id : m.monitor_id;
+    const newDisciplina = disciplina_id !== undefined ? disciplina_id : m.disciplina_id;
+    const newAtiva = ativa !== undefined ? ativa : m.ativa;
+    const newSemestre = semestre || m.semestre;
+    db.query(sql, [newMonitor, newDisciplina, newAtiva, newSemestre, req.params.id], (err) => {
+      if (err) {
+        if (err.code === 'ER_DUP_ENTRY') return res.status(400).json({ error: 'Monitor ja vinculado a esta disciplina' });
+        return res.status(500).json({ error: 'Erro ao atualizar monitoria' });
+      }
       res.json({ message: 'Monitoria atualizada com sucesso' });
     });
   });
