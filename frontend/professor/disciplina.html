@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciar Disciplina - Fórum Acadêmico UNIFEI</title>
+  <link rel="stylesheet" href="../shared/css/global.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <div class="header-logo">
+          <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="40" cy="40" r="38" fill="white" opacity="0.2"/>
+            <path d="M40 20L50 35H30L40 20Z" fill="white"/>
+            <rect x="30" y="35" width="20" height="25" fill="white"/>
+          </svg>
+          <div class="header-title">
+            <h1>Fórum Acadêmico UNIFEI</h1>
+            <p>Área do Professor</p>
+          </div>
+        </div>
+        <div class="header-user">
+          <div class="user-info">
+            <span class="user-name" id="user-name">Carregando...</span>
+            <span class="user-role" id="user-role">Professor</span>
+          </div>
+          <button class="btn-logout" id="btn-logout">Sair</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container" style="padding: 32px 20px;">
+    <a href="index.html" style="color: var(--primary-color); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px;">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+      </svg>
+      Voltar para Minhas Disciplinas
+    </a>
+
+    <div id="disciplina-info" class="loading">
+      <div class="spinner"></div>
+    </div>
+
+    <div id="topicos-section" style="display: none;">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Tópicos da Disciplina</h3>
+        </div>
+        <div class="card-body">
+          <div id="topicos-lista" class="loading">
+            <div class="spinner"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../shared/js/auth.js"></script>
+  <script src="../shared/js/api.js"></script>
+  <script>
+    const API_URL = 'http://localhost:3000/api';
+    const urlParams = new URLSearchParams(window.location.search);
+    const disciplinaId = urlParams.get('id');
+    
+    if (!disciplinaId) {
+      alert('ID da disciplina não fornecido');
+      window.location.href = 'index.html';
+    }
+
+    async function carregarDisciplina() {
+      const response = await fetch(`${API_URL}/disciplinas/${disciplinaId}`);
+      const disciplina = await response.json();
+      
+      if (disciplina.error) {
+        alert('Disciplina não encontrada');
+        window.location.href = 'index.html';
+        return;
+      }
+      
+      document.getElementById('disciplina-info').innerHTML = `
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title" style="font-size: 24px;">${disciplina.nome}</h2>
+              <p style="margin: 4px 0 0 0; color: var(--text-secondary);">
+                ${disciplina.codigo} • ${disciplina.periodo_letivo}
+              </p>
+            </div>
+            <span class="badge badge-primary">Professor Responsável</span>
+          </div>
+          <div class="card-body">
+            ${disciplina.descricao ? `<p style="color: var(--text-secondary);">${disciplina.descricao}</p>` : ''}
+          </div>
+        </div>
+      `;
+      
+      document.getElementById('topicos-section').style.display = 'block';
+    }
+
+    async function carregarTopicos() {
+      const container = document.getElementById('topicos-lista');
+      container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+      
+      const response = await fetch(`${API_URL}/topicos?disciplina_id=${disciplinaId}`);
+      const topicos = await response.json();
+      
+      if (!topicos || topicos.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">Nenhum tópico nesta disciplina ainda.</p>';
+        return;
+      }
+      
+      const statusColors = {
+        'Aberto': 'badge-info',
+        'Resolvido': 'badge-success',
+        'Fechado': 'badge-secondary'
+      };
+      
+      container.innerHTML = topicos.map(t => `
+        <a href="topico.html?id=${t.id}" style="display: block; padding: 16px; border-bottom: 1px solid var(--border-color); text-decoration: none; transition: background 0.2s;">
+          <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+            <h4 style="margin: 0; color: var(--text-primary); font-size: 16px;">${t.titulo}</h4>
+            <span class="badge ${statusColors[t.status]}">${t.status}</span>
+          </div>
+          <p style="color: var(--text-secondary); margin: 8px 0; font-size: 14px;">
+            ${t.conteudo.substring(0, 150)}${t.conteudo.length > 150 ? '...' : ''}
+          </p>
+          <small style="color: var(--text-tertiary);">
+            Por ${t.autor_nome || 'Anônimo'} • ${new Date(t.criado_em).toLocaleDateString('pt-BR')} • ${t.total_respostas || 0} respostas
+          </small>
+        </a>
+      `).join('');
+      
+      container.querySelectorAll('a').forEach(link => {
+        link.addEventListener('mouseenter', function() {
+          this.style.background = 'var(--bg-tertiary)';
+        });
+        link.addEventListener('mouseleave', function() {
+          this.style.background = 'transparent';
+        });
+      });
+    }
+
+    carregarDisciplina();
+    carregarTopicos();
+  </script>
+</body>
+</html>

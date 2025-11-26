@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tópico - Fórum Acadêmico UNIFEI</title>
+  <link rel="stylesheet" href="../shared/css/global.css">
+  <style>
+    .resposta-item {
+      padding: 20px;
+      border-left: 3px solid var(--border-color);
+      margin-bottom: 16px;
+      background: var(--bg-primary);
+      border-radius: var(--border-radius);
+    }
+    
+    .resposta-item.melhor-resposta {
+      border-left-color: var(--success-color);
+      background: #f0fdf4;
+    }
+    
+    .resposta-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .resposta-autor {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .resposta-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+    }
+    
+    .resposta-acoes {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      align-items: center;
+    }
+    
+    .btn-icon {
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      background: white;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    
+    .btn-icon:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--primary-color);
+    }
+    
+    .btn-icon.voted {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+    
+    .btn-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .btn-votar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px 12px;
+      border: 2px solid var(--border-color);
+      background: white;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: all 0.2s;
+      min-width: 60px;
+    }
+    
+    .btn-votar:hover {
+      border-color: var(--primary-color);
+      background: var(--bg-tertiary);
+    }
+    
+    .btn-votar.voted {
+      border-color: var(--primary-color);
+      background: var(--primary-color);
+      color: white;
+    }
+    
+    .btn-votar svg {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .votos-count {
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal.active {
+      display: flex;
+    }
+    
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    
+    .modal-header {
+      padding: 24px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .modal-body {
+      padding: 24px;
+    }
+    
+    .modal-footer {
+      padding: 24px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <div class="header-logo">
+          <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="40" cy="40" r="38" fill="white" opacity="0.2"/>
+            <path d="M40 20L50 35H30L40 20Z" fill="white"/>
+            <rect x="30" y="35" width="20" height="25" fill="white"/>
+          </svg>
+          <div class="header-title">
+            <h1>Fórum Acadêmico UNIFEI</h1>
+            <p>Área do Professor</p>
+          </div>
+        </div>
+        <div class="header-user">
+          <div class="user-info">
+            <span class="user-name" id="user-name">Carregando...</span>
+            <span class="user-role" id="user-role">Professor</span>
+          </div>
+          <button class="btn-logout" id="btn-logout">Sair</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container" style="padding: 32px 20px;">
+    <a href="javascript:history.back()" style="color: var(--primary-color); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px;">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+      </svg>
+      Voltar
+    </a>
+
+    <div id="topico-container" class="loading">
+      <div class="spinner"></div>
+    </div>
+
+    <div id="respostas-section" style="display: none;">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Adicionar Resposta</h3>
+        </div>
+        <div class="card-body">
+          <form id="form-resposta">
+            <div class="form-group">
+              <label class="form-label">Sua Resposta</label>
+              <textarea class="form-textarea" id="resposta-conteudo" placeholder="Digite sua resposta..." required style="min-height: 150px;"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Enviar Resposta</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Respostas (<span id="total-respostas">0</span>)</h3>
+        </div>
+        <div class="card-body">
+          <div id="respostas-lista"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Editar Tópico -->
+  <div id="modal-editar-topico" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 style="margin: 0;">Editar Tópico</h3>
+        <button onclick="fecharModal('modal-editar-topico')" style="background: none; border: none; cursor: pointer; font-size: 24px; color: var(--text-secondary);">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-editar-topico">
+          <div class="form-group">
+            <label class="form-label">Título</label>
+            <input type="text" class="form-input" id="edit-topico-titulo" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Conteúdo</label>
+            <textarea class="form-textarea" id="edit-topico-conteudo" required style="min-height: 200px;"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Categoria</label>
+            <select class="form-select" id="edit-topico-categoria" required>
+              <option value="">Selecione</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="fecharModal('modal-editar-topico')">Cancelar</button>
+        <button type="button" class="btn btn-primary" onclick="salvarEdicaoTopico()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Editar Resposta -->
+  <div id="modal-editar-resposta" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 style="margin: 0;">Editar Resposta</h3>
+        <button onclick="fecharModal('modal-editar-resposta')" style="background: none; border: none; cursor: pointer; font-size: 24px; color: var(--text-secondary);">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-editar-resposta">
+          <div class="form-group">
+            <label class="form-label">Conteúdo</label>
+            <textarea class="form-textarea" id="edit-resposta-conteudo" required style="min-height: 150px;"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="fecharModal('modal-editar-resposta')">Cancelar</button>
+        <button type="button" class="btn btn-primary" onclick="salvarEdicaoResposta()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../shared/js/auth.js"></script>
+  <script src="../shared/js/api.js"></script>
+  <script>
+    const API_URL = 'http://localhost:3000/api';
+    const urlParams = new URLSearchParams(window.location.search);
+    const topicoId = urlParams.get('id');
+    let topicoAtual = null;
+    let respostaEditando = null;
+    let votosUsuario = {};
+
+    if (!topicoId) {
+      alert('ID do tópico não fornecido');
+      history.back();
+    }
+
+    // Carregar tópico
+    async function carregarTopico() {
+      const usuario = obterUsuarioLogado();
+      const headers = obterHeaders();
+
+      const response = await fetch(`${API_URL}/topicos/${topicoId}`, { headers });
+      const topico = await response.json();
+
+      if (topico.error) {
+        alert('Tópico não encontrado');
+        history.back();
+        return;
+      }
+
+      topicoAtual = topico;
+
+      const statusColors = {
+        'Aberto': 'badge-info',
+        'Resolvido': 'badge-success',
+        'Fechado': 'badge-secondary'
+      };
+
+      const podeEditar = topico.usuario_id === usuario.id || usuario.tipo === 'Professor' || usuario.tipo === 'Monitor' || usuario.tipo === 'Administrador';
+      const podeExcluir = podeEditar;
+
+      let acoesHtml = '';
+      if (podeEditar && topico.status !== 'Fechado') {
+        acoesHtml += `<button class="btn-icon" onclick="abrirModalEditarTopico()">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+          Editar
+        </button>`;
+      }
+      if (podeExcluir) {
+        acoesHtml += `<button class="btn-icon" onclick="excluirTopico()" style="color: var(--danger-color);">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+          Excluir
+        </button>`;
+      }
+
+      document.getElementById('topico-container').innerHTML = `
+        <div class="card">
+          <div class="card-header">
+            <div style="flex: 1;">
+              ${topico.fixo ? '<span class="badge badge-warning" style="margin-bottom: 8px;">FIXADO</span>' : ''}
+              <h2 style="margin: 0 0 8px 0; font-size: 24px; color: var(--text-primary);">${topico.titulo}</h2>
+              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <span class="badge ${statusColors[topico.status]}">${topico.status}</span>
+                <span class="badge badge-secondary">${topico.categoria_nome}</span>
+                <small style="color: var(--text-secondary);">
+                  ${topico.disciplina_nome}
+                </small>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div style="margin-bottom: 16px;">
+              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color), var(--primary-light)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 18px;">
+                  ${topico.autor_nome.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <div style="font-weight: 600; color: var(--text-primary);">${topico.autor_nome}</div>
+                  <small style="color: var(--text-secondary);">
+                    ${new Date(topico.criado_em).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                  </small>
+                </div>
+              </div>
+            </div>
+            
+            <div style="line-height: 1.8; color: var(--text-primary); white-space: pre-wrap;">${topico.conteudo}</div>
+            
+            <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-color); display: flex; gap: 16px; color: var(--text-secondary); font-size: 14px;">
+              <span>
+                <svg style="width: 16px; height: 16px; display: inline; vertical-align: middle;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                ${topico.visualizacoes} visualizações
+              </span>
+              <span>
+                <svg style="width: 16px; height: 16px; display: inline; vertical-align: middle;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                ${topico.total_respostas || 0} respostas
+              </span>
+            </div>
+
+            ${acoesHtml ? `<div style="margin-top: 16px; display: flex; gap: 8px;">${acoesHtml}</div>` : ''}
+          </div>
+        </div>
+      `;
+
+      document.getElementById('respostas-section').style.display = 'block';
+      
+      if (topico.status === 'Fechado') {
+        document.getElementById('form-resposta').innerHTML = `
+          <div class="alert alert-warning">
+            Este tópico está fechado e não aceita mais respostas.
+          </div>
+        `;
+      }
+    }
+
+    // Carregar respostas
+    async function carregarRespostas() {
+      const usuario = obterUsuarioLogado();
+      const headers = obterHeaders();
+
+      const response = await fetch(`${API_URL}/respostas?topico_id=${topicoId}`, { headers });
+      const respostas = await response.json();
+
+      document.getElementById('total-respostas').textContent = respostas.length;
+
+      if (!respostas || respostas.length === 0) {
+        document.getElementById('respostas-lista').innerHTML = `
+          <p style="text-align: center; color: var(--text-secondary); padding: 40px;">
+            Nenhuma resposta ainda. Seja o primeiro a responder!
+          </p>
+        `;
+        return;
+      }
+
+      // Buscar votos do usuário
+      const respostasIds = respostas.map(r => r.id);
+      const votosResponse = await fetch(`${API_URL}/votos/verificar-multiplos`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ respostas_ids: respostasIds, usuario_id: usuario.id })
+      });
+      const votosData = await votosResponse.json();
+      votosUsuario = votosData.votos || {};
+
+      const podeMarcarMelhor = topicoAtual.usuario_id === usuario.id || usuario.tipo === 'Professor' || usuario.tipo === 'Monitor';
+
+      document.getElementById('respostas-lista').innerHTML = respostas.map(r => {
+        const podeEditar = r.usuario_id === usuario.id || usuario.tipo === 'Professor' || usuario.tipo === 'Monitor';
+        const podeExcluir = podeEditar;
+        const ehRemovida = r.conteudo.includes('[Conteúdo removido');
+        const votou = votosUsuario[r.id] || false;
+        const ehPropriaResposta = r.usuario_id === usuario.id;
+
+        let acoesHtml = '';
+        if (!ehRemovida) {
+          if (podeMarcarMelhor && !r.melhor_resposta && topicoAtual.status !== 'Fechado') {
+            acoesHtml += `<button class="btn-icon" onclick="marcarMelhorResposta(${r.id})" style="color: var(--success-color);">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              Marcar como Melhor
+            </button>`;
+          }
+          if (podeEditar) {
+            acoesHtml += `<button class="btn-icon" onclick="abrirModalEditarResposta(${r.id}, \`${r.conteudo.replace(/`/g, '\\`')}\`)">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+              Editar
+            </button>`;
+          }
+          if (podeExcluir) {
+            acoesHtml += `<button class="btn-icon" onclick="excluirResposta(${r.id})" style="color: var(--danger-color);">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              Excluir
+            </button>`;
+          }
+        }
+
+        return `
+          <div class="resposta-item ${r.melhor_resposta ? 'melhor-resposta' : ''}">
+            ${r.melhor_resposta ? '<div style="margin-bottom: 12px;"><span class="badge badge-success">Melhor Resposta</span></div>' : ''}
+            <div class="resposta-header">
+              <div class="resposta-autor">
+                <div class="resposta-avatar">${r.autor_nome.charAt(0).toUpperCase()}</div>
+                <div>
+                  <div style="font-weight: 600; color: var(--text-primary);">${r.autor_nome}</div>
+                  <small style="color: var(--text-secondary);">
+                    ${new Date(r.criado_em).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                  </small>
+                </div>
+              </div>
+            </div>
+            <div style="line-height: 1.8; color: var(--text-primary); ${ehRemovida ? 'font-style: italic; color: var(--text-secondary);' : ''}">${r.conteudo}</div>
+            <div class="resposta-acoes">
+              ${!ehRemovida && !ehPropriaResposta ? `
+                <button class="btn-votar ${votou ? 'voted' : ''}" onclick="votarResposta(${r.id})" id="btn-voto-${r.id}">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
+                  </svg>
+                  <span class="votos-count" id="votos-${r.id}">${r.votos || 0}</span>
+                </button>
+              ` : ''}
+              ${acoesHtml}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Votar em resposta
+    async function votarResposta(respostaId) {
+      const usuario = obterUsuarioLogado();
+      const headers = obterHeaders();
+
+      const response = await fetch(`${API_URL}/votos`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          resposta_id: respostaId,
+          usuario_id: usuario.id
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.error) {
+        alert('Erro: ' + result.error);
+      } else {
+        // Atualizar interface
+        const btnVoto = document.getElementById(`btn-voto-${respostaId}`);
+        const votosSpan = document.getElementById(`votos-${respostaId}`);
+        
+        if (result.votou) {
+          btnVoto.classList.add('voted');
+          votosUsuario[respostaId] = true;
+        } else {
+          btnVoto.classList.remove('voted');
+          delete votosUsuario[respostaId];
+        }
+        
+        votosSpan.textContent = result.total_votos;
+      }
+    }
+
+    // Criar resposta
+    document.getElementById('form-resposta').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const usuario = obterUsuarioLogado();
+      const conteudo = document.getElementById('resposta-conteudo').value;
+
+      const headers = obterHeaders();
+      const response = await fetch(`${API_URL}/respostas`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          conteudo,
+          topico_id: parseInt(topicoId),
+          usuario_id: usuario.id
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.error) {
+        alert('Erro: ' + result.error);
+      } else {
+        alert('Resposta enviada com sucesso!');
+        document.getElementById('resposta-conteudo').value = '';
+        carregarRespostas();
+      }
+    });
+
+    // Carregar categorias
+    fetch(`${API_URL}/categorias`)
+      .then(r => r.json())
+      .then(categorias => {
+        const select = document.getElementById('edit-topico-categoria');
+        categorias.forEach(cat => {
+          select.innerHTML += `<option value="${cat.id}">${cat.nome}</option>`;
+        });
+      });
+
+    // Modais
+    function abrirModal(modalId) {
+      document.getElementById(modalId).classList.add('active');
+    }
+
+    function fecharModal(modalId) {
+      document.getElementById(modalId).classList.remove('active');
+    }
+
+    function abrirModalEditarTopico() {
+      document.getElementById('edit-topico-titulo').value = topicoAtual.titulo;
+      document.getElementById('edit-topico-conteudo').value = topicoAtual.conteudo;
+      document.getElementById('edit-topico-categoria').value = topicoAtual.categoria_id;
+      abrirModal('modal-editar-topico');
+    }
+
+    async function salvarEdicaoTopico() {
+      const headers = obterHeaders();
+      const response = await fetch(`${API_URL}/topicos/${topicoId}`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({
+          titulo: document.getElementById('edit-topico-titulo').value,
+          conteudo: document.getElementById('edit-topico-conteudo').value,
+          categoria_id: parseInt(document.getElementById('edit-topico-categoria').value)
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.error) {
+        alert('Erro: ' + result.error);
+      } else {
+        alert('Tópico atualizado com sucesso!');
+        fecharModal('modal-editar-topico');
+        location.reload();
+      }
+    }
+
+    async function excluirTopico() {
+      if (!confirm('Tem certeza que deseja fechar este tópico?')) return;
+
+      const headers = obterHeaders();
+      const response = await fetch(`${API_URL}/topicos/${topicoId}`, {
+        method: 'DELETE',
+        headers
+      });
+
+      const result = await response.json();
+
+      if (result.error) {
+        alert('Erro: ' + result.error);
+      } else {
+        alert('Tópico fechado com sucesso!');
+        history.back();
+      }
+    }
+
+    function abrirModalEditarResposta(id, conteudo) {
+      respostaEditando = id;
+      document.getElementById('edit-resposta-conteudo').value = conteudo;
+      abrirModal('modal-editar-resposta');
+    }
+
+    async function salvarEdicaoResposta() {
+      const headers = obterHeaders();
+      const response = await fetch(`${API_URL}/respostas/${respostaEditando}`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({
+          conteudo: document.getElementById('edit-resposta-conteudo').value
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.error) {
+        alert('Erro: ' + result.error);
+      } else {
+        alert('Resposta atualizada com sucesso!');
+        fecharModal('modal-editar-resposta');
+        carregarRespostas();
+      }
+    }
+
+    async function excluirResposta(id) {
+      if (!confirm('Tem certeza que deseja remover esta resposta?')) return;
+
+      const headers = obterHeaders();
+      const response = await fetch(`${API_URL}/respostas/${id}`, {
+        method: 'DELETE',
+        headers
+      });
+
+      const result = await response.json();
+
+      if (result.error) {
+        alert('Erro: ' + result.error);
+      } else {
+        alert('Resposta removida com sucesso!');
+        carregarRespostas();
+      }
+    }
+
+    async function marcarMelhorResposta(id) {
+      if (!confirm('Marcar esta como a melhor resposta?')) return;
+
+      const headers = obterHeaders();
+      const response = await fetch(`${API_URL}/respostas/${id}/melhor-resposta`, {
+        method: 'PUT',
+        headers
+      });
+
+      const result = await response.json();
+
+      if (result.error) {
+        alert('Erro: ' + result.error);
+      } else {
+        alert('Melhor resposta marcada!');
+        location.reload();
+      }
+    }
+
+    carregarTopico();
+    carregarRespostas();
+  </script>
+</body>
+</html>

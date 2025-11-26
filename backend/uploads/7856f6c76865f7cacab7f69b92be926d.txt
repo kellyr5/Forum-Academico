@@ -1,0 +1,12 @@
+==================================================
+DOCUMENTO DE TESTE - FORUM ACADEMICO UNIFEI
+==================================================
+
+Este arquivo foi criado automaticamente pelo sistema de testes Selenium.
+
+Proposito: Validar funcionalidade de upload de arquivos
+Data e hora: 18/11/2025 as 20:35:55
+Autor: Sistema Automatizado de Testes
+
+Conteudo: Este e um arquivo de exemplo para testar o sistema de upload.
+==================================================

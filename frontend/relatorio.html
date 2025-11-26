@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatorio de Atividades - Forum UNIFEI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .relatorio-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        .card-resumo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        .stat-card {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 4px solid #003d7a;
+        }
+        .stat-card h3 {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        .stat-card .numero {
+            font-size: 32px;
+            font-weight: 700;
+            color: #003d7a;
+        }
+        .tabela-container {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #003d7a;
+            border-bottom: 2px solid #dee2e6;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #f0f4f8;
+        }
+        tr:hover {
+            background: #f8fafb;
+        }
+        .btn-imprimir {
+            background: #003d7a;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 24px;
+        }
+        .btn-imprimir:hover {
+            background: #002855;
+        }
+        @media print {
+            .btn-imprimir { display: none; }
+            .header, .navbar { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>Forum Academico UNIFEI</h1>
+            <p class="subtitle">Relatorio de Atividades do Sistema</p>
+        </div>
+    </div>
+
+    <div class="relatorio-container">
+        <button class="btn-imprimir" onclick="window.print()">Imprimir Relatorio</button>
+
+        <h2 style="margin-bottom: 24px; color: #003d7a;">Resumo Geral</h2>
+        <div class="card-resumo" id="resumo"></div>
+
+        <div class="tabela-container">
+            <h3 style="margin-bottom: 16px; color: #003d7a;">Topicos por Disciplina</h3>
+            <table id="tabela-disciplinas">
+                <thead>
+                    <tr>
+                        <th>Disciplina</th>
+                        <th>Total de Topicos</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="tabela-container">
+            <h3 style="margin-bottom: 16px; color: #003d7a;">Usuarios Mais Ativos</h3>
+            <table id="tabela-usuarios">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Topicos Criados</th>
+                        <th>Respostas Dadas</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="tabela-container">
+            <h3 style="margin-bottom: 16px; color: #003d7a;">Recados por Tipo</h3>
+            <table id="tabela-recados">
+                <thead>
+                    <tr>
+                        <th>Tipo de Aviso</th>
+                        <th>Quantidade</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const API = 'http://localhost:3000/api';
+
+        function carregarRelatorio() {
+            fetch(API + '/relatorios/atividades')
+                .then(r => r.json())
+                .then(data => {
+                    // Resumo
+                    const resumoDiv = document.getElementById('resumo');
+                    resumoDiv.innerHTML = `
+                        <div class="stat-card">
+                            <h3>Total Usuarios</h3>
+                            <div class="numero">${data.resumo.total_usuarios}</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Total Topicos</h3>
+                            <div class="numero">${data.resumo.total_topicos}</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Total Respostas</h3>
+                            <div class="numero">${data.resumo.total_respostas}</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Total Arquivos</h3>
+                            <div class="numero">${data.resumo.total_arquivos}</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Total Recados</h3>
+                            <div class="numero">${data.resumo.total_recados}</div>
+                        </div>
+                    `;
+
+                    // Topicos por Disciplina
+                    const tabelaDisciplinas = document.querySelector('#tabela-disciplinas tbody');
+                    tabelaDisciplinas.innerHTML = data.topicos_por_disciplina.map(d => `
+                        <tr>
+                            <td>${d.disciplina}</td>
+                            <td>${d.total_topicos}</td>
+                        </tr>
+                    `).join('');
+
+                    // Usuarios Mais Ativos
+                    const tabelaUsuarios = document.querySelector('#tabela-usuarios tbody');
+                    tabelaUsuarios.innerHTML = data.usuarios_mais_ativos.map(u => `
+                        <tr>
+                            <td>${u.nome_completo}</td>
+                            <td>${u.topicos_criados}</td>
+                            <td>${u.respostas_dadas}</td>
+                            <td><strong>${parseInt(u.topicos_criados) + parseInt(u.respostas_dadas)}</strong></td>
+                        </tr>
+                    `).join('');
+
+                    // Recados por Tipo
+                    const tabelaRecados = document.querySelector('#tabela-recados tbody');
+                    tabelaRecados.innerHTML = data.recados_por_tipo.map(r => `
+                        <tr>
+                            <td>${r.tipo_aviso}</td>
+                            <td>${r.total}</td>
+                        </tr>
+                    `).join('');
+                })
+                .catch(e => {
+                    console.error('Erro ao carregar relatorio:', e);
+                    alert('Erro ao carregar relatorio. Verifique se o backend esta rodando.');
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', carregarRelatorio);
+    </script>
+<script src="js/auth.js"></script>
+</body>
+</html>

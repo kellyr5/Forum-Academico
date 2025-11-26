@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forum Academico UNIFEI</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1>Fórum Acadêmico UNIFEI</h1>
+      <p class="subtitle">Plataforma de Discussão e Gerenciamento Acadêmico</p>
+    </div>
+  </header>
+
+  <nav class="navbar">
+    <div class="container">
+      <ul class="nav-tabs">
+        <li><a href="#" class="tab-link active" data-tab="mural">Mural</a></li>
+        <li><a href="#" class="tab-link" data-tab="usuarios">Usuários</a></li>
+        <li><a href="#" class="tab-link" data-tab="disciplinas">Disciplinas</a></li>
+        <li><a href="#" class="tab-link" data-tab="topicos">Tópicos</a></li>
+        <li><a href="#" class="tab-link" data-tab="respostas">Respostas</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container main-content">
+    <section class="content-section active" id="mural">
+      <div class="section-header">
+        <h2>Mural de Recados</h2>
+        <p>Gerencie comunicados e avisos institucionais</p>
+      </div>
+      <div class="form-container">
+        <h3>Publicar Novo Recado</h3>
+        <form id="form-recado">
+          <div class="form-group">
+            <label for="recado-titulo">Título:</label>
+            <input type="text" id="recado-titulo" placeholder="Digite o título do recado" required>
+          </div>
+          <div class="form-group">
+            <label for="recado-conteudo">Conteúdo:</label>
+            <textarea id="recado-conteudo" placeholder="Digite o conteúdo do recado" rows="5" required></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="recado-categoria">Categoria:</label>
+              <select id="recado-categoria" required>
+                <option value="">Selecione a categoria</option>
+                <option value="1">Dúvida</option>
+                <option value="2">Discussão</option>
+                <option value="3">Anúncio</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="recado-usuario">ID do Usuário:</label>
+              <input type="number" id="recado-usuario" placeholder="ID do autor" value="1" required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" id="btn-publicar-recado">Publicar Recado</button>
+        </form>
+      </div>
+      <div class="lista-container">
+        <h3>Recados Publicados</h3>
+        <div id="recados-lista"></div>
+      </div>
+    </section>
+
+    <section class="content-section" id="usuarios">
+      <div class="section-header">
+        <h2>Gerenciamento de Usuários</h2>
+        <p>Cadastre e gerencie usuários da plataforma</p>
+      </div>
+      <div class="form-container">
+        <h3>Cadastrar Novo Usuário</h3>
+        <form id="form-usuario">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="usuario-nome">Nome Completo:</label>
+              <input type="text" id="usuario-nome" placeholder="Digite o nome completo" required>
+            </div>
+            <div class="form-group">
+              <label for="usuario-email">Email:</label>
+              <input type="email" id="usuario-email" placeholder="email@unifei.edu.br" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="usuario-senha">Senha:</label>
+              <input type="password" id="usuario-senha" placeholder="Digite a senha" required>
+            </div>
+            <div class="form-group">
+              <label for="usuario-tipo">Tipo de Usuário:</label>
+              <select id="usuario-tipo" required>
+                <option value="">Selecione o tipo</option>
+                <option value="Aluno">Aluno</option>
+                <option value="Professor">Professor</option>
+                <option value="Monitor">Monitor</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="usuario-universidade">Universidade:</label>
+              <select id="usuario-universidade" required>
+                <option value="">Selecione a universidade</option>
+                <option value="1">UNIFEI</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="usuario-curso">Curso:</label>
+              <select id="usuario-curso" required>
+                <option value="">Selecione o curso</option>
+                <option value="1">Engenharia de Software</option>
+                <option value="2">Engenharia Elétrica</option>
+                <option value="3">Engenharia de Computação</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="usuario-periodo">Período:</label>
+            <select id="usuario-periodo" required>
+              <option value="">Selecione o período</option>
+              <option value="1">1º Período</option>
+              <option value="2">2º Período</option>
+              <option value="3">3º Período</option>
+              <option value="4">4º Período</option>
+              <option value="5">5º Período</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary" id="btn-cadastrar-usuario">Cadastrar Usuário</button>
+        </form>
+      </div>
+      <div class="lista-container">
+        <h3>Usuários Registrados</h3>
+        <div id="usuarios-lista"></div>
+      </div>
+    </section>
+
+    <section class="content-section" id="disciplinas">
+      <div class="section-header">
+        <h2>Gerenciamento de Disciplinas</h2>
+        <p>Cadastre e gerencie disciplinas do curso</p>
+      </div>
+      <div class="form-container">
+        <h3>Cadastrar Nova Disciplina</h3>
+        <form id="form-disciplina">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="disciplina-nome">Nome da Disciplina:</label>
+              <input type="text" id="disciplina-nome" placeholder="Digite o nome" required>
+            </div>
+            <div class="form-group">
+              <label for="disciplina-codigo">Código:</label>
+              <input type="text" id="disciplina-codigo" placeholder="Ex: ES001" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="disciplina-curso">Curso:</label>
+              <select id="disciplina-curso" required>
+                <option value="">Selecione o curso</option>
+                <option value="1">Engenharia de Software</option>
+                <option value="2">Engenharia Elétrica</option>
+                <option value="3">Engenharia de Computação</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="disciplina-professor">ID do Professor:</label>
+              <input type="number" id="disciplina-professor" placeholder="ID do professor" value="1" required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" id="btn-cadastrar-disciplina">Cadastrar Disciplina</button>
+        </form>
+      </div>
+      <div class="lista-container">
+        <h3>Disciplinas Cadastradas</h3>
+        <div id="disciplinas-lista"></div>
+      </div>
+    </section>
+
+    <section class="content-section" id="topicos">
+      <div class="section-header">
+        <h2>Gerenciamento de Tópicos</h2>
+        <p>Crie e gerencie tópicos de discussão</p>
+      </div>
+      <div class="form-container">
+        <h3>Criar Novo Tópico</h3>
+        <form id="form-topico">
+          <div class="form-group">
+            <label for="topico-titulo">Título:</label>
+            <input type="text" id="topico-titulo" placeholder="Digite o título do tópico" required>
+          </div>
+          <div class="form-group">
+            <label for="topico-conteudo">Conteúdo:</label>
+            <textarea id="topico-conteudo" placeholder="Digite o conteúdo do tópico" rows="5" required></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="topico-disciplina">Disciplina:</label>
+              <select id="topico-disciplina" required>
+                <option value="">Selecione a disciplina</option>
+                <option value="1">Engenharia de Software</option>
+                <option value="2">Banco de Dados</option>
+                <option value="3">Algoritmos e Estruturas de Dados</option>
+                <option value="4">Web Development</option>
+                <option value="5">Segurança da Informação</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="topico-categoria">Categoria:</label>
+              <select id="topico-categoria" required>
+                <option value="">Selecione a categoria</option>
+                <option value="1">Dúvida</option>
+                <option value="2">Discussão</option>
+                <option value="3">Anúncio</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="topico-usuario">ID do Usuário:</label>
+            <input type="number" id="topico-usuario" placeholder="ID do criador" value="2" required>
+          </div>
+          <button type="submit" class="btn btn-primary" id="btn-criar-topico">Criar Tópico</button>
+        </form>
+      </div>
+      <div class="lista-container">
+        <h3>Tópicos Criados</h3>
+        <div id="topicos-lista"></div>
+      </div>
+    </section>
+
+    <section class="content-section" id="respostas">
+      <div class="section-header">
+        <h2>Gerenciamento de Respostas</h2>
+        <p>Responda tópicos e gerencie discussões</p>
+      </div>
+      <div class="form-container">
+        <h3>Registrar Nova Resposta</h3>
+        <form id="form-resposta">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="resposta-topico">ID do Tópico:</label>
+              <input type="number" id="resposta-topico" placeholder="ID do tópico" value="1" required>
+            </div>
+            <div class="form-group">
+              <label for="resposta-usuario">ID do Usuário:</label>
+              <input type="number" id="resposta-usuario" placeholder="ID do usuário" value="2" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="resposta-conteudo">Conteúdo da Resposta:</label>
+            <textarea id="resposta-conteudo" placeholder="Digite sua resposta" rows="5" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" id="btn-registrar-resposta">Registrar Resposta</button>
+        </form>
+      </div>
+      <div class="lista-container">
+        <h3>Respostas Registradas</h3>
+        <div id="respostas-lista"></div>
+      </div>
+    </section>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

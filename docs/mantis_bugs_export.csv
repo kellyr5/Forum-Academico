@@ -1,0 +1,20 @@
+"ID","Categoria","Severidade","Prioridade","Status","Resumo","Descricao","Passos para Reproduzir","Informacoes Adicionais","Reportado por","Atribuido a","Data Reportado","Data Resolvido","Versao","Versao Corrigida"
+"0001","Backend - Database","major","high","resolved","Validacao de email duplicado permite cadastros repetidos","Sistema permitia o cadastro de usuarios com o mesmo email, violando regra de negocio de unicidade","1. Cadastrar usuario com email teste@unifei.edu.br
+2. Tentar cadastrar outro usuario com mesmo email
+3. Sistema permite duplicacao","Tabela usuarios sem constraint UNIQUE na coluna email","Equipe QA","Dev Backend","2025-01-15","2025-01-15","1.0.0","2.0.0"
+"0002","Backend - Upload","critical","urgent","resolved","Timeout em upload de arquivos acima de 10MB","Aplicacao apresenta timeout quando usuario tenta fazer upload de arquivos grandes","1. Acessar aba Arquivos
+2. Selecionar arquivo maior que 10MB
+3. Clicar em Upload
+4. Aguardar timeout (aproximadamente 30 segundos)","Servidor Node.js sem configuracao de limite de tamanho. Multer com configuracao padrao","Usuario Final","Dev Backend","2025-01-16","2025-01-16","1.0.0","2.0.0"
+"0003","Backend - Database","critical","urgent","resolved","Campo universidade_id obrigatorio impede cadastro de usuarios","Impossivel cadastrar usuarios sem vinculo a uma universidade devido a constraint NOT NULL","1. Acessar aba Usuarios
+2. Preencher formulario sem selecionar universidade
+3. Clicar em Cadastrar
+4. Receber erro SQL: Field universidade_id doesn't have a default value","Schema da tabela usuarios com campo universidade_id NOT NULL sem valor default","Equipe QA","Dev Backend","2025-01-17","2025-01-17","1.0.0","2.0.0"
+"0004","Backend - Database","major","high","resolved","Delecao de topico nao remove respostas associadas","Ao deletar um topico, as respostas permanecem no banco criando registros orfaos","1. Criar topico de teste
+2. Adicionar 3 respostas ao topico
+3. Deletar o topico
+4. Consultar tabela respostas - registros orfaos presentes","Foreign key sem ON DELETE CASCADE. Respostas ficam com topico_id invalido","Dev Backend","Dev Backend","2025-01-17","2025-01-17","1.0.0","2.0.0"
+"0005","Frontend - Upload","minor","normal","resolved","Preview de imagens falha para alguns formatos","Sistema nao exibe preview para arquivos PNG e WEBP, apenas JPG","1. Fazer upload de imagem PNG
+2. Observar que preview nao e exibido
+3. Repetir com WEBP - mesmo problema
+4. Testar com JPG - funciona corretamente","Validacao de tipo MIME muito restritiva, checando apenas image/jpeg","Usuario Final","Dev Frontend","2025-01-18","2025-01-18","1.0.0","2.0.0"
