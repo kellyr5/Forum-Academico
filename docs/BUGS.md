@@ -23,8 +23,8 @@
 | Prioridade | Alta |
 | Status | Resolvido |
 | Modulo | Backend - Database |
-| Data Reportado | 2025-10-28 |
-| Data Resolvido | 2025-10-28 |
+| Data Reportado | 2025-11-05 |
+| Data Resolvido | 2025-11-05 |
 
 **Descricao:** Sistema permitia cadastro de usuarios com emails duplicados.
 
@@ -41,8 +41,8 @@
 | Prioridade | Urgente |
 | Status | Resolvido |
 | Modulo | Backend - Upload |
-| Data Reportado | 2025-10-29 |
-| Data Resolvido | 2025-10-29 |
+| Data Reportado | 2025-11-12 |
+| Data Resolvido | 2025-11-12 |
 
 **Descricao:** Timeout em uploads acima de 10MB.
 
@@ -59,8 +59,8 @@
 | Prioridade | Urgente |
 | Status | Resolvido |
 | Modulo | Backend - Database |
-| Data Reportado | 2025-10-30 |
-| Data Resolvido | 2025-10-30 |
+| Data Reportado | 2025-11-12 |
+| Data Resolvido | 2025-11-12 |
 
 **Descricao:** Campo universidade_id impedia cadastro.
 
@@ -77,8 +77,8 @@
 | Prioridade | Alta |
 | Status | Resolvido |
 | Modulo | Backend - Database |
-| Data Reportado | 2025-10-30 |
-| Data Resolvido | 2025-10-30 |
+| Data Reportado | 2025-11-12 |
+| Data Resolvido | 2025-11-12 |
 
 **Descricao:** Respostas ficavam orfas apos deletar topico.
 
@@ -95,8 +95,8 @@
 | Prioridade | Normal |
 | Status | Resolvido |
 | Modulo | Frontend - Upload |
-| Data Reportado | 2025-11-01 |
-| Data Resolvido | 2025-11-01 |
+| Data Reportado | 2025-11-19 |
+| Data Resolvido | 2025-11-19 |
 
 **Descricao:** Preview nao funcionava para PNG e WEBP.
 
