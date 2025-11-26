@@ -1,0 +1,62 @@
+"ID","Categoria","Severidade","Prioridade","Status","Resumo","Descricao","Passos para Reproduzir","Informacoes Adicionais","Reportado por","Atribuido a","Data Reportado","Data Resolvido","Versao","Versao Corrigida"
+"0001","Backend - Database","major","high","resolved","Validacao de email duplicado permite cadastros repetidos","Sistema permitia o cadastro de usuarios com o mesmo email, violando regra de negocio de unicidade","1. Cadastrar usuario com email teste@unifei.edu.br
+2. Tentar cadastrar outro usuario com mesmo email
+3. Sistema permite duplicacao","Tabela usuarios sem constraint UNIQUE na coluna email","Equipe QA","Dev Backend","2025-10-28","2025-10-28","1.0.0","1.0.1"
+"0002","Backend - Upload","critical","urgent","resolved","Timeout em upload de arquivos acima de 10MB","Aplicacao apresenta timeout quando usuario tenta fazer upload de arquivos grandes","1. Acessar aba Arquivos
+2. Selecionar arquivo maior que 10MB
+3. Clicar em Upload
+4. Aguardar timeout (aproximadamente 30 segundos)","Servidor Node.js sem configuracao de limite de tamanho. Multer com configuracao padrao","Usuario Final","Dev Backend","2025-10-29","2025-10-29","1.0.0","1.0.1"
+"0003","Backend - Database","critical","urgent","resolved","Campo universidade_id obrigatorio impede cadastro de usuarios","Impossivel cadastrar usuarios sem vinculo a uma universidade devido a constraint NOT NULL","1. Acessar aba Usuarios
+2. Preencher formulario sem selecionar universidade
+3. Clicar em Cadastrar
+4. Receber erro SQL: Field universidade_id doesn't have a default value","Schema da tabela usuarios com campo universidade_id NOT NULL sem valor default","Equipe QA","Dev Backend","2025-10-30","2025-10-30","1.0.0","1.0.1"
+"0004","Backend - Database","major","high","resolved","Delecao de topico nao remove respostas associadas","Ao deletar um topico, as respostas permanecem no banco criando registros orfaos","1. Criar topico de teste
+2. Adicionar 3 respostas ao topico
+3. Deletar o topico
+4. Consultar tabela respostas - registros orfaos presentes","Foreign key sem ON DELETE CASCADE. Respostas ficam com topico_id invalido","Dev Backend","Dev Backend","2025-10-30","2025-10-30","1.0.0","1.0.1"
+"0005","Frontend - Upload","minor","normal","resolved","Preview de imagens falha para alguns formatos","Sistema nao exibe preview para arquivos PNG e WEBP, apenas JPG","1. Fazer upload de imagem PNG
+2. Observar que preview nao e exibido
+3. Repetir com WEBP - mesmo problema
+4. Testar com JPG - funciona corretamente","Validacao de tipo MIME muito restritiva, checando apenas image/jpeg","Usuario Final","Dev Frontend","2025-11-01","2025-11-01","1.0.1","2.0.0"
+"0006","Backend - Auth","critical","urgent","resolved","Incompatibilidade de hash entre bcrypt e bcryptjs","Sistema de login falha para usuarios criados pelo init-db.js devido a incompatibilidade de bibliotecas de hash","1. Executar init-db.js para criar usuarios
+2. Tentar fazer login com credenciais corretas
+3. Sistema retorna 'Email ou senha incorretos'","init-db.js usa bcrypt nativo, auth.js usa bcryptjs. Hashes gerados sao incompativeis","Equipe QA","Dev Backend","2025-11-04","2025-11-04","2.0.0","2.0.1"
+"0007","Frontend - UI","minor","low","resolved","Botao de logout nao visivel em telas pequenas","Em dispositivos moveis ou janelas reduzidas, botao de logout fica oculto pelo menu","1. Acessar sistema em tela com largura menor que 768px
+2. Fazer login
+3. Observar que botao de logout nao aparece","CSS do header nao possui media queries adequadas para responsividade","Usuario Final","Dev Frontend","2025-11-05","2025-11-06","2.0.0","2.0.1"
+"0008","Backend - API","major","high","resolved","Rota de relatorios retorna 500 em producao","Endpoint /api/relatorios/geral falha com erro interno em ambiente de producao","1. Acessar /api/relatorios/geral
+2. Servidor retorna status 500
+3. Log mostra erro de conexao com banco","Pool de conexoes do MySQL esgotado. Conexoes nao eram fechadas corretamente","Equipe QA","Dev Backend","2025-11-07","2025-11-08","2.0.0","2.0.1"
+"0009","Frontend - Forms","minor","normal","resolved","Validacao de formulario permite campos vazios","Formulario de cadastro de disciplina aceita submissao com campos obrigatorios vazios","1. Acessar cadastro de disciplina
+2. Deixar campo Nome vazio
+3. Clicar em Cadastrar
+4. Formulario e submetido sem validacao","Atributo required ausente nos campos HTML. Validacao apenas no backend","Equipe QA","Dev Frontend","2025-11-10","2025-11-11","2.0.1","3.0.0"
+"0010","Backend - CRUD","major","high","resolved","Edicao de usuario sobrescreve senha com valor null","Ao editar dados de usuario sem informar nova senha, campo senha_hash e sobrescrito","1. Editar usuario existente
+2. Alterar apenas o nome
+3. Salvar alteracoes
+4. Tentar fazer login - senha invalida","Rota PUT /usuarios/:id nao verifica se campo senha foi enviado antes de atualizar","Dev Backend","Dev Backend","2025-11-11","2025-11-12","2.0.1","3.0.0"
+"0011","Frontend - Navigation","minor","low","resolved","Links do menu nao destacam pagina atual","Navegacao do sistema nao indica visualmente qual aba/pagina esta ativa","1. Navegar entre abas do sistema
+2. Observar que nenhuma aba fica destacada
+3. Usuario perde referencia de localizacao","Classe CSS 'active' nao e aplicada dinamicamente aos itens do menu","Usuario Final","Dev Frontend","2025-11-13","2025-11-14","3.0.0","3.0.1"
+"0012","Backend - Security","major","high","resolved","Token JWT nao expira adequadamente","Tokens de autenticacao permanecem validos indefinidamente mesmo apos logout","1. Fazer login e copiar token
+2. Fazer logout
+3. Usar token copiado para acessar rotas protegidas
+4. Acesso e permitido","Middleware de autenticacao nao valida expiracao do token. Campo exp nao configurado","Equipe QA","Dev Backend","2025-11-15","2025-11-16","3.0.0","3.0.1"
+"0013","Frontend - Display","minor","normal","resolved","Data de criacao exibida em formato incorreto","Datas sao exibidas no formato ISO (2025-11-15T10:30:00Z) ao inves de formato local","1. Visualizar lista de topicos
+2. Observar coluna de data
+3. Formato nao e amigavel ao usuario","Frontend nao formata datas recebidas da API. Necessario usar toLocaleDateString()","Usuario Final","Dev Frontend","2025-11-17","2025-11-18","3.0.1","4.0.0"
+"0014","Backend - Performance","major","high","resolved","Query de listagem de topicos sem paginacao causa lentidao","Listagem de topicos carrega todos os registros de uma vez, causando lentidao","1. Popular banco com 1000+ topicos
+2. Acessar listagem de topicos
+3. Tempo de resposta superior a 5 segundos","Endpoint nao implementa paginacao. SELECT sem LIMIT","Equipe QA","Dev Backend","2025-11-18","2025-11-19","3.0.1","4.0.0"
+"0015","Backend - CRUD","minor","normal","resolved","Ordenacao de respostas ignora melhor_resposta","Respostas marcadas como melhor resposta nao aparecem no topo da lista","1. Marcar uma resposta como melhor resposta
+2. Recarregar pagina do topico
+3. Resposta aparece na ordem cronologica, nao no topo","Query de listagem ordena apenas por data. Necessario ORDER BY melhor_resposta DESC","Usuario Final","Dev Backend","2025-11-20","2025-11-20","4.0.0","4.0.0"
+"0016","Frontend - Accessibility","minor","low","acknowledged","Contraste de cores insuficiente em alguns elementos","Alguns textos apresentam baixo contraste com o fundo, dificultando leitura","1. Acessar sistema
+2. Observar textos em cinza claro sobre fundo branco
+3. Razao de contraste abaixo de 4.5:1","Cores definidas no CSS nao atendem WCAG 2.1 AA. Necessario ajustar paleta","Usuario Final","Dev Frontend","2025-11-21","","4.0.0",""
+"0017","Documentation","minor","low","acknowledged","README desatualizado com instrucoes incorretas","Documentacao do projeto contem comandos e configuracoes desatualizadas","1. Seguir instrucoes do README
+2. Alguns comandos falham
+3. Versoes de dependencias divergem","README nao foi atualizado nas ultimas releases. Necessario revisao completa","Equipe QA","Dev Backend","2025-11-22","","4.0.0",""
+"0018","Backend - Validation","minor","normal","confirmed","Periodo letivo aceita formato invalido","Campo periodo_letivo aceita qualquer string, sem validacao de formato","1. Cadastrar disciplina
+2. Informar periodo como 'abc123'
+3. Sistema aceita valor invalido","Validacao de formato (YYYY.N) nao implementada no backend","Equipe QA","Dev Backend","2025-11-23","","4.0.0",""

@@ -3,15 +3,23 @@ const router = express.Router();
 const db = require('../config/database');
 const { verificarAutenticacao, verificarProfessorOuAdmin } = require('../middleware/auth');
 
-// GET - Disciplinas que um monitor monitora
+// GET - Listar todas as monitorias
+router.get('/', verificarAutenticacao, (req, res) => {
+  const sql = `
+    SELECT m.*, u.nome_completo as monitor_nome, d.nome as disciplina_nome, d.codigo
+    FROM monitorias m
+    JOIN usuarios u ON m.monitor_id = u.id
+    JOIN disciplinas d ON m.disciplina_id = d.id
+    ORDER BY m.criado_em DESC
+  `;
+  db.query(sql, (err, results) => {
+    if (err) return res.status(500).json({ error: 'Erro ao buscar monitorias' });
+    res.json(results);
+  });
+});
+
+// GET - Monitorias de um monitor
 router.get('/monitor/:monitorId', verificarAutenticacao, (req, res) => {
-  const monitorId = req.params.monitorId;
-  
-  // Verificar se é o próprio monitor ou admin
-  if (req.usuario.id != monitorId && req.usuario.tipo_usuario !== 'Administrador') {
-    return res.status(403).json({ error: 'Acesso negado' });
-  }
-  
   const sql = `
     SELECT m.*, d.nome as disciplina_nome, d.codigo, d.periodo_letivo,
            u.nome_completo as professor_nome
@@ -21,55 +29,48 @@ router.get('/monitor/:monitorId', verificarAutenticacao, (req, res) => {
     WHERE m.monitor_id = ? AND m.ativa = TRUE
     ORDER BY d.nome
   `;
-  
-  db.query(sql, [monitorId], (err, results) => {
-    if (err) {
-      console.error('Erro ao buscar monitorias:', err);
-      return res.status(500).json({ error: 'Erro ao buscar disciplinas' });
-    }
+  db.query(sql, [req.params.monitorId], (err, results) => {
+    if (err) return res.status(500).json({ error: 'Erro ao buscar monitorias' });
     res.json(results);
   });
 });
 
-// POST - Adicionar monitor (professor ou admin)
-router.post('/', verificarAutenticacao, verificarProfessorOuAdmin, (req, res) => {
+// POST - Criar monitoria
+router.post('/', verificarAutenticacao, (req, res) => {
   const { monitor_id, disciplina_id, semestre } = req.body;
-  
   if (!monitor_id || !disciplina_id || !semestre) {
     return res.status(400).json({ error: 'Dados incompletos' });
   }
-  
-  const sql = `
-    INSERT INTO monitorias (monitor_id, disciplina_id, semestre, ativa)
-    VALUES (?, ?, ?, TRUE)
-  `;
-  
+  const sql = 'INSERT INTO monitorias (monitor_id, disciplina_id, semestre, ativa) VALUES (?, ?, ?, TRUE)';
   db.query(sql, [monitor_id, disciplina_id, semestre], (err, result) => {
     if (err) {
-      if (err.code === 'ER_DUP_ENTRY') {
-        return res.status(400).json({ error: 'Monitor já vinculado a esta disciplina' });
-      }
-      console.error('Erro ao adicionar monitor:', err);
-      return res.status(500).json({ error: 'Erro ao adicionar monitor' });
+      if (err.code === 'ER_DUP_ENTRY') return res.status(400).json({ error: 'Monitor ja vinculado a esta disciplina' });
+      return res.status(500).json({ error: 'Erro ao adicionar monitoria' });
     }
-    
-    res.status(201).json({
-      id: result.insertId,
-      message: 'Monitor adicionado com sucesso'
+    res.status(201).json({ id: result.insertId, message: 'Monitoria criada com sucesso' });
+  });
+});
+
+// PUT - Atualizar monitoria
+router.put('/:id', verificarAutenticacao, (req, res) => {
+  const { ativa, semestre } = req.body;
+  db.query('SELECT * FROM monitorias WHERE id = ?', [req.params.id], (err, results) => {
+    if (err || results.length === 0) return res.status(404).json({ error: 'Monitoria nao encontrada' });
+    const m = results[0];
+    const sql = 'UPDATE monitorias SET ativa = ?, semestre = ? WHERE id = ?';
+    db.query(sql, [ativa !== undefined ? ativa : m.ativa, semestre || m.semestre, req.params.id], (err) => {
+      if (err) return res.status(500).json({ error: 'Erro ao atualizar monitoria' });
+      res.json({ message: 'Monitoria atualizada com sucesso' });
     });
   });
 });
 
-// DELETE - Remover monitor (professor ou admin)
-router.delete('/:id', verificarAutenticacao, verificarProfessorOuAdmin, (req, res) => {
-  const monitoriaId = req.params.id;
-  
-  db.query('DELETE FROM monitorias WHERE id = ?', [monitoriaId], (err) => {
-    if (err) {
-      console.error('Erro ao remover monitoria:', err);
-      return res.status(500).json({ error: 'Erro ao remover monitoria' });
-    }
-    res.json({ message: 'Monitor removido com sucesso' });
+// DELETE - Remover monitoria
+router.delete('/:id', verificarAutenticacao, (req, res) => {
+  db.query('DELETE FROM monitorias WHERE id = ?', [req.params.id], (err, result) => {
+    if (err) return res.status(500).json({ error: 'Erro ao remover monitoria' });
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'Monitoria nao encontrada' });
+    res.json({ message: 'Monitoria removida com sucesso' });
   });
 });
 
