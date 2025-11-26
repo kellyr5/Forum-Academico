@@ -1,111 +1,110 @@
-# Fórum Acadêmico UNIFEI
+# Forum Academico UNIFEI
 
-Sistema web acadêmico para a Universidade Federal de Itajubá (UNIFEI), desenvolvido para gerenciamento de fóruns, comunicação interna e apoio às atividades acadêmicas.
+Sistema web de forum academico para a Universidade Federal de Itajuba (UNIFEI).
 
-**Versão:** 2.2.0  
-**Status:** Produção  
-**Data:** 20/11/2025  
-
----
-
-## 📘 Visão Geral
-
-O **Fórum Acadêmico UNIFEI** é uma plataforma web completa voltada à comunicação acadêmica, oferecendo ferramentas para discussão, colaboração e gestão de conteúdos educacionais para alunos, professores, monitores e administradores.
+**Versao:** 3.0.0  
+**Release:** 04  
+**Status:** Producao  
+**Data:** 26/11/2025
 
 ---
 
-## 🚀 Principais Funcionalidades
+## VISAO GERAL
 
-- ✅ **8 módulos CRUD completos**
-- ✅ Sistema de autenticação com perfis de acesso
-- ✅ Controle de permissões por tipo de usuário
-- ✅ Upload e download de arquivos
-- ✅ Sistema de votação em respostas
-- ✅ Mural de avisos
-- ✅ Relatórios gerenciais
-- ✅ Testes automatizados com Selenium
+O Forum Academico UNIFEI e uma plataforma web completa para gerenciamento de discussoes academicas, compartilhamento de materiais, controle de matriculas/monitorias e comunicacao entre alunos, professores e administradores.
 
----
+### Funcionalidades Principais
 
-## 🧩 Módulos Implementados (CRUDs)
-
-### 1. Usuários
-Gerenciamento de usuários com perfis:
-- Administrador
-- Professor
-- Aluno
-- Monitor
+- 8 modulos CRUD completos
+- Sistema de autenticacao com 4 perfis de usuario
+- Relatorio gerencial com metricas
+- Upload e download de arquivos
+- Sistema de votacao em respostas
+- Mural de avisos e recados
+- Gestao de matriculas
+- Gestao de monitorias
+- Painel administrativo completo
 
 ---
 
-### 2. Disciplinas
-Gerenciamento de disciplinas vinculadas a cursos e professores responsáveis.
+## 8 CRUDs IMPLEMENTADOS
+
+| # | Modulo | Create | Read | Update | Delete | Status |
+|---|--------|--------|------|--------|--------|--------|
+| 1 | Usuarios | OK | OK | OK | OK | COMPLETO |
+| 2 | Disciplinas | OK | OK | OK | OK | COMPLETO |
+| 3 | Topicos | OK | OK | OK | OK | COMPLETO |
+| 4 | Respostas | OK | OK | OK | OK | COMPLETO |
+| 5 | Recados/Mural | OK | OK | OK | OK | COMPLETO |
+| 6 | Arquivos | OK | OK | OK | OK | COMPLETO |
+| 7 | Matriculas | OK | OK | OK | OK | COMPLETO |
+| 8 | Monitorias | OK | OK | OK | OK | COMPLETO |
 
 ---
 
-### 3. Tópicos
-Sistema de debates acadêmicos com:
-- Categorias
-- Status (Aberto, Fechado, Resolvido)
+## RELATORIO IMPLEMENTADO
+
+### Relatorio de Atividades do Forum
+
+**Endpoints disponiveis:**
+- GET /api/relatorios/atividades - Relatorio geral
+- GET /api/relatorios/geral - Estatisticas consolidadas
 
 ---
 
-### 4. Respostas
-Respostas em tópicos com:
-- Sistema de votação (Upvote / Downvote)
+## INSTALACAO
+
+### 1. Configurar Banco de Dados
+```bash
+mysql -u root -p < backend/config/init.sql
+```
+
+### 2. Instalar Dependencias
+```bash
+cd backend
+npm install
+```
+
+### 3. Iniciar Aplicacao
+```bash
+cd backend
+node server.js
+```
+
+### 4. Acessar Sistema
+- URL: http://localhost:5500/frontend/login.html
+- Admin: admin@unifei.edu.br / Teste@123
 
 ---
 
-### 5. Mural (Recados)
-Publicação de comunicados organizados por tipo:
-- Importante
-- Evento
-- Aviso Geral
-- Aviso da Faculdade
+## USUARIOS DE TESTE
+
+| Tipo | Email | Senha |
+|------|-------|-------|
+| Administrador | admin@unifei.edu.br | Teste@123 |
+| Professor | carlos.silva@unifei.edu.br | Prof@123 |
+| Aluno | maria.santos@unifei.edu.br | Aluno@123 |
+| Monitor | joao.oliveira@unifei.edu.br | Monitor@123 |
 
 ---
 
-### 6. Arquivos
-Sistema de gerenciamento de arquivos:
-- Upload (máx. 10MB)
-- Download
-- Vinculação aos tópicos
+## CONTROLE DE VERSAO
+
+- Repositorio Git inicializado
+- Tag v3.0.0 criada
+- Baseline salva
 
 ---
 
-### 7. Matrículas
-Controle acadêmico de alunos:
-- Vinculação aluno ↔ disciplina
-- Edição de status da matrícula
-- Filtro por semestre
+## BUGS
+
+Total: 8 bugs identificados e resolvidos.
+Taxa de resolucao: 100%
 
 ---
 
-### 8. Monitorias
-Gerenciamento das monitorias:
-- Cadastro de monitores por disciplina
-- Controle de semestre
-- Ativação e desativação da monitoria
+## EQUIPE
 
----
-
-## ⚙️ Requisitos do Sistema
-
-### Software Necessário
-
-- Node.js 18+
-- MySQL 8+
-- Python 3.8+
-- Google Chrome (para Selenium)
-
----
-
-### Dependências Node.js
-
-```json
-{
-  "express": "^4.18.0",
-  "mysql2": "^3.0.0",
-  "multer": "^1.4.0",
-  "cors": "^2.8.5"
-}
+- Desenvolvimento: Equipe 10
+- Disciplina: Engenharia de Software
+- Instituicao: UNIFEI

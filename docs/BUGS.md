@@ -1,61 +1,161 @@
 # Registro de Bugs - Forum Academico UNIFEI
+## Release 04 - Versao 3.0.0
+
+---
+
+## Resumo
+
+| Metrica | Valor |
+|---------|-------|
+| Total de Bugs | 8 |
+| Resolvidos | 8 |
+| Abertos | 0 |
+| Taxa de Resolucao | 100% |
+
+---
 
 ## Bug 001 - Validacao de Email Duplicado
-**Severidade:** Media
-**Status:** Resolvido
-**Data:** 2025-01-15
-**Descricao:** Sistema permitia cadastro de usuarios com emails duplicados
-**Solucao:** Adicionado UNIQUE constraint na coluna email da tabela usuarios
-**Impacto:** Prevencao de duplicatas no banco
 
-## Bug 002 - Upload de Arquivos Grandes
-**Severidade:** Alta
-**Status:** Resolvido
-**Data:** 2025-01-16
-**Descricao:** Timeout em uploads acima de 10MB
-**Solucao:** Configurado limite em 10MB e validacao no frontend
-**Impacto:** Melhor UX e prevencao de sobrecarga do servidor
+| Campo | Valor |
+|-------|-------|
+| ID | BUG-001 |
+| Severidade | Major |
+| Prioridade | Alta |
+| Status | Resolvido |
+| Modulo | Backend - Database |
+| Data Reportado | 2025-10-28 |
+| Data Resolvido | 2025-10-28 |
+
+**Descricao:** Sistema permitia cadastro de usuarios com emails duplicados.
+
+**Solucao:** Adicionado UNIQUE constraint na coluna email.
+
+---
+
+## Bug 002 - Timeout em Upload de Arquivos Grandes
+
+| Campo | Valor |
+|-------|-------|
+| ID | BUG-002 |
+| Severidade | Critical |
+| Prioridade | Urgente |
+| Status | Resolvido |
+| Modulo | Backend - Upload |
+| Data Reportado | 2025-10-29 |
+| Data Resolvido | 2025-10-29 |
+
+**Descricao:** Timeout em uploads acima de 10MB.
+
+**Solucao:** Configurado limite de 10MB no Multer.
+
+---
 
 ## Bug 003 - Campo Universidade Obrigatorio
-**Severidade:** Alta
-**Status:** Resolvido
-**Data:** 2025-01-17
-**Descricao:** Campo universidade_id impedia cadastro de usuarios
-**Solucao:** Alterado campo para aceitar NULL
-**Impacto:** Permitir cadastro sem vinculo de universidade
 
-## Bug 004 - Foreign Key em Cascata
-**Severidade:** Media
-**Status:** Resolvido
-**Data:** 2025-01-17
-**Descricao:** Delecao de topico nao deletava respostas
-**Solucao:** Adicionado ON DELETE CASCADE nas foreign keys
-**Impacto:** Integridade referencial garantida
+| Campo | Valor |
+|-------|-------|
+| ID | BUG-003 |
+| Severidade | Critical |
+| Prioridade | Urgente |
+| Status | Resolvido |
+| Modulo | Backend - Database |
+| Data Reportado | 2025-10-30 |
+| Data Resolvido | 2025-10-30 |
+
+**Descricao:** Campo universidade_id impedia cadastro.
+
+**Solucao:** Alterado para aceitar NULL.
+
+---
+
+## Bug 004 - Delecao de Topico nao Remove Respostas
+
+| Campo | Valor |
+|-------|-------|
+| ID | BUG-004 |
+| Severidade | Major |
+| Prioridade | Alta |
+| Status | Resolvido |
+| Modulo | Backend - Database |
+| Data Reportado | 2025-10-30 |
+| Data Resolvido | 2025-10-30 |
+
+**Descricao:** Respostas ficavam orfas apos deletar topico.
+
+**Solucao:** Adicionado ON DELETE CASCADE.
+
+---
 
 ## Bug 005 - Preview de Imagens
-**Severidade:** Baixa
-**Status:** Resolvido
-**Data:** 2025-01-18
-**Descricao:** Preview nao exibia para alguns formatos de imagem
-**Solucao:** Validacao de tipo MIME mais abrangente
-**Impacto:** Melhor visualizacao de arquivos
 
-## Template para Novos Bugs
+| Campo | Valor |
+|-------|-------|
+| ID | BUG-005 |
+| Severidade | Minor |
+| Prioridade | Normal |
+| Status | Resolvido |
+| Modulo | Frontend - Upload |
+| Data Reportado | 2025-11-01 |
+| Data Resolvido | 2025-11-01 |
 
-### Bug XXX - Titulo do Bug
-**Severidade:** Baixa/Media/Alta/Critica
-**Status:** Aberto/Em Analise/Resolvido/Fechado
-**Data:** AAAA-MM-DD
-**Reportado por:** Nome
-**Atribuido a:** Nome
-**Descricao:** Descricao detalhada do problema
-**Passos para Reproduzir:**
-1. Passo 1
-2. Passo 2
-3. Passo 3
+**Descricao:** Preview nao funcionava para PNG e WEBP.
 
-**Comportamento Esperado:** O que deveria acontecer
-**Comportamento Atual:** O que esta acontecendo
-**Screenshots:** (se aplicavel)
-**Solucao:** Descricao da solucao implementada
-**Impacto:** Impacto da correcao no sistema
+**Solucao:** Expandida validacao de tipo MIME.
+
+---
+
+## Bug 006 - Header de Autenticacao Ausente
+
+| Campo | Valor |
+|-------|-------|
+| ID | BUG-006 |
+| Severidade | Major |
+| Prioridade | Alta |
+| Status | Resolvido |
+| Modulo | Frontend - Admin |
+| Data Reportado | 2025-11-25 |
+| Data Resolvido | 2025-11-26 |
+
+**Descricao:** Painel admin nao enviava header x-usuario-id.
+
+**Solucao:** Implementada funcao fetchAuth().
+
+---
+
+## Bug 007 - Dashboard Admin nao Carrega
+
+| Campo | Valor |
+|-------|-------|
+| ID | BUG-007 |
+| Severidade | Major |
+| Prioridade | Alta |
+| Status | Resolvido |
+| Modulo | Frontend - Admin |
+| Data Reportado | 2025-11-25 |
+| Data Resolvido | 2025-11-26 |
+
+**Descricao:** Dashboard mostrava 0 em todos os cards.
+
+**Solucao:** Corrigido para usar fetchAuth().
+
+---
+
+## Bug 008 - Botoes CRUD sem Resposta
+
+| Campo | Valor |
+|-------|-------|
+| ID | BUG-008 |
+| Severidade | Minor |
+| Prioridade | Normal |
+| Status | Resolvido |
+| Modulo | Frontend - Admin |
+| Data Reportado | 2025-11-25 |
+| Data Resolvido | 2025-11-26 |
+
+**Descricao:** Botoes de CRUD nao funcionavam.
+
+**Solucao:** Atualizado para usar fetchAuth().
+
+---
+
+Ultima atualizacao: 26/11/2025
